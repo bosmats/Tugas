@@ -1,0 +1,19 @@
+.bdy {
+    background-image: url("../img/img10.jpg");
+}
+
+.card {
+    background: rgba(0, 0, 0, 0.39);
+    border-radius: 5px;
+    margin: 15px auto;
+    padding: 20px;
+}
+
+.txt1 {
+    font-size: 50px;
+    color: white;
+}
+
+.txt2 {
+    color: white;
+}
