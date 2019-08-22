@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Product;
 use DataTables;
+use App\Category;
 use DB;
 use File;
 
@@ -79,8 +80,8 @@ class ProductsController extends Controller
      */
     public function edit($id)
     {
-        $products = Product::findOrfail($id);
-        $categories = Category::plick('name', 'id')->toArray();
+        $products = Product::findOrFail($id);
+        $categories = Category::pluck('name', 'id')->toArray();
         return view('products.edit')->with(compact('products', 'categories'));
     }
 
@@ -93,7 +94,34 @@ class ProductsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->validate($request, [
+            'code' => 'required|string|unique:products',
+            'name' => 'required|string',
+            'description' => 'nullable|string',
+            'stock' => 'required|integer',
+            'price' => 'required|numeric',
+            'photo' => 'image|mimes:jpg,png,jpeg|max:2048',
+            'category_id' => 'required|exists:categories,id',
+        ]);
+        $products = Product::find($id);
+        $products->update($request->all());
+        if ($request->hasFile('photo')) {
+            $uploaded_photo = $request->file('photo');
+            $extension = $uploaded_photo->getClientOriginalExtension();
+            $filename = md5(time()) . '.' . $extension;
+            $destinationPath = public_path() . DIRECTORY_SEPARATOR . 'images';
+            $uploaded_photo->move($destinationPath, $filename);
+            if ($products->photo) {
+                $old_photo = $products->photo;
+                $filepath = public_path() . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . $products->photo;
+                try {
+                    File::delete($filepath);
+                } catch (FileNotFoundException $e) { }
+            }
+            $products->photo = $filename;
+            $products->save();
+        }
+        return redirect()->route('products.store');
     }
 
     /**
