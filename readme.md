@@ -13,6 +13,6 @@
 Social Media
 
 - [Facebook](https://www.facebook.com/Mhmd.rizki.33).
-- [Instagram](https://www.instagram.com/bosmats_/?hl=id).
+- [Instagram](https://www.instagram.com/bosmats_/).
 
 ## Thank You For Your Visit
